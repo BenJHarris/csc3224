@@ -11,7 +11,8 @@ public class RenderSelectedItem : MonoBehaviour
 
     void Start()
     {
-        inventory = GameObject.Find("Player").GetComponent<Inventory>();
+        inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
+        db = inventory.itemDatabase;
     }
 
     // Update is called once per frame

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Plantpot : MonoBehaviour, IInteractable
+public class Plantpot : Interactable
 {
 
-    public void Interact()
+    override public void Interact()
     {
         Debug.Log("I'm a plantpot");
     }

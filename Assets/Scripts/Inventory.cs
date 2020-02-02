@@ -6,18 +6,24 @@ public class Inventory: MonoBehaviour
 {
     public static int INVENTORY_SIZE = 10;
 
-    private Item[] items = new Item[INVENTORY_SIZE];
-    private int[] quantity = new int[INVENTORY_SIZE];
+    public ItemDatabase itemDatabase;
+
+    public delegate void OnInventoryChange();
+    public OnInventoryChange onInventoryChange;
+
+    public Item[] items = new Item[INVENTORY_SIZE];
+    public int[] quantity = new int[INVENTORY_SIZE];
     public int selected = 0;
-    
-    public int AddItem(Item item)
+
+    public bool AddItem(Item item)
     {
         for (int i = 0; i < INVENTORY_SIZE; i++)
         {
             if (items[i] == item)
             {
                 quantity[i]++;
-                return i;
+                onInventoryChange.Invoke();
+                return true;
             }
         }
 
@@ -27,11 +33,12 @@ public class Inventory: MonoBehaviour
             {
                 items[i] = item;
                 quantity[i] = 1;
-                return i;
+                onInventoryChange.Invoke();
+                return true;
             }
         }
 
-        return -1;
+        return false;
     }
 
     public Item GetSelectedItem()
@@ -42,56 +49,71 @@ public class Inventory: MonoBehaviour
     public void IncreaseSelected()
     {
         selected = (selected + 1) % INVENTORY_SIZE;
+        onInventoryChange.Invoke();
     }
 
     public void DecreaseSelected()
     {
         if (selected == 0)
         {
-            selected = INVENTORY_SIZE;
+            selected = INVENTORY_SIZE - 1;
         } else
         {
             selected--;
         }
+        onInventoryChange.Invoke();
     }
 
     public void SetSelected(int slot)
     {
         selected = Mathf.Abs(slot) % INVENTORY_SIZE;
+        onInventoryChange.Invoke();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown("0"))
         {
-            selected = 9;
+            SetSelected(9);
         } else if (Input.GetKeyDown("1"))
         {
-            selected = 0;
+            SetSelected(0);
         } else if (Input.GetKeyDown("2"))
         {
-            selected = 1;
+            SetSelected(1);
         } else if (Input.GetKeyDown("3"))
         {
-            selected = 2;
+            SetSelected(2);
         } else if (Input.GetKeyDown("4"))
         {
-            selected = 3;
+            SetSelected(3);
         } else if (Input.GetKeyDown("5"))
         {
-            selected = 4;
+            SetSelected(4);
         } else if (Input.GetKeyDown("6"))
         {
-            selected = 5;
+            SetSelected(5);
         } else if (Input.GetKeyDown("7"))
         {
-            selected = 6;
+            SetSelected(6);
         } else if (Input.GetKeyDown("8"))
         {
-            selected = 7;
+            SetSelected(7);
         } else if (Input.GetKeyDown("9"))
         {
-            selected = 8;
+            SetSelected(8);
+        }
+
+        float scrollDeltaY = -Input.mouseScrollDelta.y;
+        if (scrollDeltaY != 0)
+        {
+            if (scrollDeltaY > 0)
+            {
+                IncreaseSelected();
+            } else
+            {
+                DecreaseSelected();
+            }
         }
     }
 }
